@@ -57,6 +57,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('회원가입 성공! 로그인해주세요.')),
           );
+
+          Navigator.pop(context);
         }
       } finally {
         // 4. 작업이 끝나면(성공하든 실패하든) 문 열어주기

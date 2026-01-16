@@ -35,7 +35,7 @@ class AuthRepository {
     required String password,
   }) async {
     // 1. 로그인 요청
-    final response = await _dio.post('/auth/login', data: {
+    final response = await _dio.post('/auth/signin', data: {
       'username': username,
       'password': password,
     });
