@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:front_mission/provider/auth_provider.dart';
 import 'package:front_mission/ui/auth/signup/signup_screen.dart';
+import 'package:front_mission/ui/post/post_list_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -46,18 +47,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       );
 
       if (mounted) {
-        // // 4. 성공 시 이동
-        // Navigator.pushAndRemoveUntil(
-        //   context,
-        //   MaterialPageRoute(builder: (_) => const PostListScreen()),
-        //       (route) => false,
-        // );
+        // 4. 성공 시 이동
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const PostListScreen()),
+              (route) => false,
+        );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('로그인 실패: ${e.toString()}'),
+            content: Text('로그인 실패: 정확하지 않은 이메일이나 패스워드 입니다'),
             backgroundColor: Colors.red,
           ),
         );

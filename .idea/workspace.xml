@@ -5,9 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e4d41a42-389a-448b-b9ea-96349768bc25" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/lib/data/model/post_model.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/data/repository/post_repository.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/provider/post_list_provider.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/ui/common/user_info_widget.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/ui/post/post_list_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/auth/signup/signup_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/auth/signup/signup_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/auth/login/login_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/auth/login/login_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
