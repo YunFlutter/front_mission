@@ -1,7 +1,7 @@
 class Validators {
   // 이메일 정규식
   static final RegExp _emailRegExp = RegExp(
-    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
   );
 
   // 비밀번호 정규식: 8자 이상, 영문, 숫자, 특수문자(!%*#?&) 포함

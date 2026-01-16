@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:front_mission/ui/auth/signup_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,11 +20,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // 아직 홈 화면을 안 만들었으므로 임시 페이지 연결
-      home: const Scaffold(
-        body: Center(
-          child: Text('Riverpod 세팅 완료!'),
-        ),
-      ),
+      home: SignupScreen()
     );
   }
 }

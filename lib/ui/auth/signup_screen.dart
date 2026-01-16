@@ -19,7 +19,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _nameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-
+  bool _isLocked = false;
   @override
   void dispose() {
     // 메모리 누수 방지를 위해 컨트롤러 해제
@@ -32,29 +32,41 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   // 회원가입 제출 함수
   void _onSubmit() async {
+
+    if (_isLocked) return;
+
     // 1. 폼 유효성 검사 실행
     if (_formKey.currentState!.validate()) {
+
+      setState(() {
+        _isLocked = true;
+      });
+
       // 키보드 내리기
       FocusScope.of(context).unfocus();
 
-      // 2. 컨트롤러를 통해 회원가입 요청 (confirmPassword 포함)
-      final success = await ref.read(signupControllerProvider.notifier).signUp(
-        username: _emailController.text,
-        name: _nameController.text,
-        password: _passwordController.text,
-        confirmPassword: _confirmPasswordController.text, // ★ 서버 전송용
-      );
-
-      // 3. 성공 시 처리
-      if (success && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('회원가입 성공! 로그인해주세요.'),
-            backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-          ),
+      try {
+        final success = await ref.read(signupControllerProvider.notifier).signUp(
+          username: _emailController.text,
+          name: _nameController.text,
+          password: _passwordController.text,
+          confirmPassword: _confirmPasswordController.text,
         );
-        Navigator.pop(context); // 로그인 화면으로 복귀
+
+        if (success && mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('회원가입 성공! 로그인해주세요.')),
+          );
+        }
+      } finally {
+        // 4. 작업이 끝나면(성공하든 실패하든) 문 열어주기
+        // (화면이 아직 살아있다면)
+        if (mounted) {
+          setState(() {
+            _isLocked = false;
+          });
+          ref.invalidate(signupControllerProvider);
+        }
       }
     }
   }
@@ -70,7 +82,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       if (next.hasError) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('오류 발생: ${next.error}'),
+            content: Text('오류 발생: 중복된 회원이거나 잘못된 회원 정보를 입력하셨습니다'),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
           ),
