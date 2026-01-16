@@ -8,10 +8,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/core/network/dio_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/network/dio_provider.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/repository/post_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/repository/post_repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/provider/category_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/provider/category_provider.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/provider/category_provider.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/provider/category_provider.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/auth/signup/signup_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/auth/signup/signup_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/post/post_write_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/post/post_write_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,7 +107,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="Dart">
           <url>file://$PROJECT_DIR$/lib/data/repository/post_repository.dart</url>
-          <line>27</line>
+          <line>28</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
