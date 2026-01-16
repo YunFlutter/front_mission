@@ -17,7 +17,7 @@ class _PostWriteScreenState extends ConsumerState<PostWriteScreen> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
 
-  String? _selectedCategory;
+  String? _selectedCategoryKey;
 
   // 파일 관련 변수
   String? _selectedFilePath;
@@ -79,7 +79,7 @@ class _PostWriteScreenState extends ConsumerState<PostWriteScreen> {
   void _onSubmit() async {
 
     // 유효성 검사: 카테고리가 로딩되지 않았거나 선택되지 않았을 때
-    if (_selectedCategory == null) {
+    if (_selectedCategoryKey == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('카테고리를 선택해주세요.')),
       );
@@ -98,7 +98,7 @@ class _PostWriteScreenState extends ConsumerState<PostWriteScreen> {
     final success = await ref.read(postWriteControllerProvider.notifier).createPost(
       title: _titleController.text,
       content: _contentController.text,
-      category: _selectedCategory!,
+      category: _selectedCategoryKey!,
       filePath: _selectedFilePath,
     );
 
@@ -141,42 +141,33 @@ class _PostWriteScreenState extends ConsumerState<PostWriteScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             categoryAsyncValue.when(
-              // 1. 데이터 로딩 중
               loading: () => const LinearProgressIndicator(),
-
-              // 2. 에러 발생
               error: (err, stack) => Text('카테고리 로드 실패: $err'),
+              data: (categoriesMap) {
+                if (categoriesMap.isEmpty) return const Text("카테고리가 없습니다.");
 
-              // 3. 데이터 로드 완료
-              data: (categories) {
-                // 데이터가 왔는데 비어있을 경우 처리
-                if (categories.isEmpty) return const Text("카테고리가 없습니다.");
-
-                // 초기값이 설정 안 되어 있다면, 리스트의 첫 번째 항목으로 자동 설정
-                if (_selectedCategory == null && categories.isNotEmpty) {
-                  // 빌드 중에 setState를 부르면 안 되므로,
-                  // post frame callback 혹은 단순히 렌더링 값으로만 처리
-                  // 여기서는 렌더링 시 값만 맞춰주고, 실제 변수 할당은 onChanged에서 함
-                  _selectedCategory = categories.first;
+                // 초기값 설정: 맵의 첫 번째 Key로 설정
+                if (_selectedCategoryKey == null && categoriesMap.isNotEmpty) {
+                  _selectedCategoryKey = categoriesMap.keys.first;
                 }
 
                 return DropdownButtonFormField<String>(
-                  value: _selectedCategory, // 현재 선택된 값
+                  value: _selectedCategoryKey, // 현재 선택된 Key
                   decoration: const InputDecoration(
                     labelText: '카테고리',
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
-                  // 서버에서 받은 리스트로 메뉴 아이템 생성
-                  items: categories.map((String category) {
+                  // Map을 순회하며 DropdownItem 생성
+                  items: categoriesMap.entries.map((entry) {
                     return DropdownMenuItem<String>(
-                      value: category,
-                      child: Text(category),
+                      value: entry.key, // 저장될 값: "NOTICE"
+                      child: Text(entry.value), // 보여질 값: "공지"
                     );
                   }).toList(),
-                  onChanged: (String? newValue) {
-                    if (newValue != null) {
-                      setState(() => _selectedCategory = newValue);
+                  onChanged: (String? newKey) {
+                    if (newKey != null) {
+                      setState(() => _selectedCategoryKey = newKey);
                     }
                   },
                 );

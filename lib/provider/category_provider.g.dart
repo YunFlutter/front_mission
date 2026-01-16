@@ -15,11 +15,13 @@ final categoryProvider = CategoryProvider._();
 final class CategoryProvider
     extends
         $FunctionalProvider<
-          AsyncValue<List<String>>,
-          List<String>,
-          FutureOr<List<String>>
+          AsyncValue<Map<String, String>>,
+          Map<String, String>,
+          FutureOr<Map<String, String>>
         >
-    with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
+    with
+        $FutureModifier<Map<String, String>>,
+        $FutureProvider<Map<String, String>> {
   CategoryProvider._()
     : super(
         from: null,
@@ -36,14 +38,14 @@ final class CategoryProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<String>> $createElement(
+  $FutureProviderElement<Map<String, String>> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<List<String>> create(Ref ref) {
+  FutureOr<Map<String, String>> create(Ref ref) {
     return category(ref);
   }
 }
 
-String _$categoryHash() => r'e94ef53b3d8d9681780bd0165bc8480a1a5059e3';
+String _$categoryHash() => r'14f7a293ec768b4ebea561f04592b8990f10b8db';

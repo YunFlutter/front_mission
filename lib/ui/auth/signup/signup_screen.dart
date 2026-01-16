@@ -44,9 +44,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
       // 키보드 내리기
       FocusScope.of(context).unfocus();
-
+      bool success = false; // 성공 여부 추적 변수
       try {
-        final success = await ref.read(signupControllerProvider.notifier).signUp(
+         success = await ref.read(signupControllerProvider.notifier).signUp(
           username: _emailController.text,
           name: _nameController.text,
           password: _passwordController.text,
@@ -67,7 +67,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           setState(() {
             _isLocked = false;
           });
-          ref.invalidate(signupControllerProvider);
+          if (!success) {
+            Future.microtask(() {
+              ref.invalidate(signupControllerProvider);
+            });
+          }
         }
       }
     }

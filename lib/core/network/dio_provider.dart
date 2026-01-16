@@ -29,12 +29,25 @@ Dio dio(Ref ref) {
     InterceptorsWrapper(
       onRequest: (options, handler) async { // ★ async 필수
         // (1) 저장소에서 토큰 꺼내기
-        final token = await storage.getAccessToken();
+        final publicPaths = [
+          '/auth/signin',
+          '/auth/signup',
+        ];
 
+        // 현재 요청하는 경로가 publicPaths에 포함되어 있는지 확인
+        // (path에 '/auth/signin' 문자열이 포함되어 있으면 true)
+        final isPublicRequest = publicPaths.any((path) => options.path.contains(path));
 
-        // (3) 헤더에 토큰 탑재 (Bearer 방식)
-        if (token != null) {
-          options.headers['Authorization'] = 'Bearer $token';
+        // ★ [수정됨] Public 요청이 아닐 때만 토큰을 넣음
+        if (!isPublicRequest) {
+          final token = await storage.getAccessToken();
+
+          if (token != null) {
+            options.headers['Authorization'] = 'Bearer $token';
+            print('🔐 [토큰 탑재] ${options.path}'); // 디버깅용
+          }
+        } else {
+          print('🔓 [토큰 미탑재] ${options.path}'); // 디버깅용
         }
 
         print('🌐 REQ [${options.method}] ${options.path}');

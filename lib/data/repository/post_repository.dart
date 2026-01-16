@@ -93,18 +93,19 @@ class PostRepository {
 
 
   // ★ 카테고리 조회 추가
-  Future<List<String>> getCategories() async {
+  Future<Map<String, String>> getCategories() async {
     try {
       final response = await _dio.get('/boards/categories');
 
 
-      final list = response.data as List;
-
-      return list.map((e) => e.toString()).toList();
+      return Map<String, String>.from(response.data);
     } catch (e) {
       print("🚨 카테고리 로드 실패: $e");
       // 실패 시 기본값이라도 반환 (앱이 죽지 않도록 방어 코드)
-      return ['NOTICE', 'FREE'];
+      return {
+        "NOTICE": "공지(기본)",
+        "FREE": "자유(기본)"
+      };
     }
   }
 }
