@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:front_mission/ui/auth/signup_screen.dart';
+import 'package:front_mission/ui/auth/signup/signup_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

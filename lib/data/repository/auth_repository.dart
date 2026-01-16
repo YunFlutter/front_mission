@@ -28,4 +28,19 @@ class AuthRepository {
       'confirmPassword': confirmPassword, // ★ 추가됨
     });
   }
+
+
+  Future<Map<String, dynamic>> login({
+    required String username,
+    required String password,
+  }) async {
+    // 1. 로그인 요청
+    final response = await _dio.post('/auth/login', data: {
+      'username': username,
+      'password': password,
+    });
+
+    // 2. 응답 반환 (예: { "accessToken": "...", "refreshToken": "..." })
+    return response.data as Map<String, dynamic>;
+  }
 }

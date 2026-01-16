@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/utils/validators.dart';
+import '../../../core/utils/validators.dart';
 import 'signup_controller.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
