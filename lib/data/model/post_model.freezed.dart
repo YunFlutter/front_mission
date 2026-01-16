@@ -15,8 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Post {
 
- int get id; String get title; String get category;// ★ 추가됨
- String get createdAt;
+ int get id; String get title; String get category; String get createdAt;
 /// Create a copy of Post
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -219,7 +218,6 @@ class _Post implements Post {
 @override final  int id;
 @override final  String title;
 @override final  String category;
-// ★ 추가됨
 @override final  String createdAt;
 
 /// Create a copy of Post

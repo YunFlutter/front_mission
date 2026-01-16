@@ -42,7 +42,7 @@ final class PostListControllerProvider
 }
 
 String _$postListControllerHash() =>
-    r'37e952e97f9c1498972a57f101a3e6a6dcc74f3f';
+    r'bca50f4eedbf5b5c3492124332127023fc898f78';
 
 abstract class _$PostListController extends $Notifier<PostListState> {
   PostListState build();

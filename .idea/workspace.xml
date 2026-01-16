@@ -5,13 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e4d41a42-389a-448b-b9ea-96349768bc25" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/data/model/post_model.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/data/repository/post_repository.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/provider/post_list_provider.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/ui/common/user_info_widget.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/ui/post/post_list_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/provider/category_provider.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/ui/post/post_write_controller.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/ui/post/post_write_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/auth/login/login_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/auth/login/login_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/network/dio_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/network/dio_provider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/network/dio_provider.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/network/dio_provider.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/post_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/post_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/post_model.freezed.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/post_model.freezed.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/repository/post_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/repository/post_repository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/provider/post_list_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/provider/post_list_provider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/provider/post_list_provider.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/provider/post_list_provider.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/post/post_list_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/post/post_list_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/linux/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/linux/flutter/generated_plugin_registrant.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/linux/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/linux/flutter/generated_plugins.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/windows/flutter/generated_plugin_registrant.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/windows/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/windows/flutter/generated_plugins.cmake" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,5 +118,16 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
     </layout>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="Dart">
+          <url>file://$PROJECT_DIR$/lib/data/repository/post_repository.dart</url>
+          <line>27</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
