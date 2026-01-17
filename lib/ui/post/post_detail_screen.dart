@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:front_mission/provider/post_delete_controller.dart';
 import 'package:front_mission/ui/post/post_edit_screen.dart';
 import '../../core/config/app_config.dart'; // Base URL 가져오기 위해 필요
 import '../../provider/post_detail_provider.dart';
@@ -11,24 +12,74 @@ class PostDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    // ★ 삭제 확인 팝업 함수
+    void _confirmDelete(BuildContext context, WidgetRef ref) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("글 삭제"),
+          content: const Text("정말로 이 게시글을 삭제하시겠습니까?\n삭제된 데이터는 복구할 수 없습니다."),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context), // 취소
+              child: const Text("취소", style: TextStyle(color: Colors.grey)),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context); // 팝업 닫기
+
+                // 삭제 요청 실행
+                final success = await ref.read(postDeleteControllerProvider.notifier).deletePost(postId);
+
+                if (success && context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("게시글이 삭제되었습니다.")),
+                  );
+                  Navigator.pop(context); // 상세 페이지 닫기 (목록으로 이동)
+                }
+              },
+              child: const Text("삭제", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+            ),
+          ],
+        ),
+      );
+    }
+
+
     // ID를 기반으로 데이터 구독
     final detailAsync = ref.watch(postDetailProvider(postId));
-
+    final deleteState = ref.watch(postDeleteControllerProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text("게시글 상세"),
         actions: [
           // 데이터가 로드된 상태일 때만 수정 버튼 표시
           detailAsync.when(
-            data: (post) => IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () {
-                // 수정 화면으로 이동 (현재 보고 있는 post 객체 전달)
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => PostEditScreen(post: post)),
-                );
-              },
+            data: (post) => Row(
+              children: [
+                // ✏️ 수정 버튼
+                IconButton(
+                  icon: const Icon(Icons.edit, color: Colors.blue),
+                  onPressed: deleteState.isLoading
+                      ? null
+                      : () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => PostEditScreen(post: post)),
+                    );
+                  },
+                ),
+                // 🗑️ 삭제 버튼 (NEW)
+                IconButton(
+                  icon: deleteState.isLoading
+                      ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                      : const Icon(Icons.delete, color: Colors.red),
+                  onPressed: deleteState.isLoading
+                      ? null
+                      : () => _confirmDelete(context, ref),
+                ),
+              ],
             ),
             loading: () => const SizedBox(),
             error: (_, __) => const SizedBox(),

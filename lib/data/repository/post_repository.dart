@@ -178,4 +178,16 @@ class PostRepository {
     await _dio.patch('/boards/$id', data: formData);
   }
 
+
+  // ★ 글 삭제 (DELETE)
+  Future<void> deletePost(int id) async {
+    try {
+      // 바디 없이 ID만 경로에 포함해서 보냄
+      await _dio.delete('/boards/$id');
+    } catch (e) {
+      print("🚨 글 삭제 실패: $e");
+      rethrow;
+    }
+  }
+
 }
