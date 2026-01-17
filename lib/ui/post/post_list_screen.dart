@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:front_mission/ui/post/post_detail_screen.dart';
 import '../../provider/post_list_provider.dart';
 import '../common/user_info_widget.dart'; // 유저 정보 위젯 (이전 단계에서 생성함)
 import 'post_write_screen.dart';
@@ -56,14 +57,24 @@ class PostListScreen extends ConsumerWidget {
                     }
                     final post = postState.posts[index];
                     return Card(
-                      child: ListTile(
-                        leading: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(color: Colors.blue[50], borderRadius: BorderRadius.circular(4)),
-                          child: Text(post.category, style: TextStyle(fontSize: 12, color: Colors.blue[700], fontWeight: FontWeight.bold)),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => PostDetailScreen(postId: post.id),
+                            ),
+                          );
+                        },
+                        child: ListTile(
+                          leading: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(color: Colors.blue[50], borderRadius: BorderRadius.circular(4)),
+                            child: Text(post.category, style: TextStyle(fontSize: 12, color: Colors.blue[700], fontWeight: FontWeight.bold)),
+                          ),
+                          title: Text(post.title, maxLines: 1, overflow: TextOverflow.ellipsis),
+                          subtitle: Text(post.createdAt.split('T')[0], style: const TextStyle(fontSize: 12)),
                         ),
-                        title: Text(post.title, maxLines: 1, overflow: TextOverflow.ellipsis),
-                        subtitle: Text(post.createdAt.split('T')[0], style: const TextStyle(fontSize: 12)),
                       ),
                     );
                   },

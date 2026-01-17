@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:front_mission/data/model/post_detail_model.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -110,6 +111,19 @@ class PostRepository {
       print("🚨 카테고리 로드 실패: $e");
       // 실패 시 기본값이라도 반환 (앱이 죽지 않도록 방어 코드)
       return {"NOTICE": "공지(기본)", "FREE": "자유(기본)"};
+    }
+  }
+
+
+
+  Future<PostDetail> getPostDetail(int id) async {
+    try {
+      final response = await _dio.get('/boards/$id');
+      return PostDetail.fromJson(response.data);
+    } catch (e) {
+      // 에러 로그
+      print("🚨 상세 조회 실패: $e");
+      rethrow;
     }
   }
 }
