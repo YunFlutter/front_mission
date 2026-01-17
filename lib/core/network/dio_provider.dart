@@ -59,9 +59,11 @@ Dio dio(Ref ref) {
         print('❌ ERR [${e.response?.statusCode}] ${e.message} (${e.requestOptions.path})');
 
         final isStatus401 = e.response?.statusCode == 401;
+        final isStatus403 = e.response?.statusCode == 403;
+
         final isPathRefresh = e.requestOptions.path.contains('/auth/refresh');
 
-        if (isStatus401 && !isPathRefresh) {
+        if ((isStatus401 || isStatus403) && !isPathRefresh) {
           print('🔄 [Token Refresh] 토큰 만료! 갱신을 시도합니다...');
 
           try {

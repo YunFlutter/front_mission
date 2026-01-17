@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:front_mission/ui/post/post_edit_screen.dart';
 import '../../core/config/app_config.dart'; // Base URL 가져오기 위해 필요
 import '../../provider/post_detail_provider.dart';
 
@@ -16,6 +17,23 @@ class PostDetailScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("게시글 상세"),
+        actions: [
+          // 데이터가 로드된 상태일 때만 수정 버튼 표시
+          detailAsync.when(
+            data: (post) => IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () {
+                // 수정 화면으로 이동 (현재 보고 있는 post 객체 전달)
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => PostEditScreen(post: post)),
+                );
+              },
+            ),
+            loading: () => const SizedBox(),
+            error: (_, __) => const SizedBox(),
+          ),
+        ],
       ),
       body: detailAsync.when(
         // 1. 로딩 중
@@ -46,7 +64,10 @@ class PostDetailScreen extends ConsumerWidget {
               children: [
                 // 카테고리 배지
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.blue.shade50,
                     borderRadius: BorderRadius.circular(5),

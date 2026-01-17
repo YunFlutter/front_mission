@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart'; // 파일 선택용
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:front_mission/core/utils/file_compressor.dart';
 // import 'package:image_picker/image_picker.dart'; // 삭제됨
 
 import '../../provider/category_provider.dart';
@@ -36,19 +37,31 @@ class _PostWriteScreenState extends ConsumerState<PostWriteScreen> {
   // ▶️ 파일 탐색기에서 파일 선택 (단일 기능으로 통합)
   Future<void> _pickFile() async {
     try {
-      // 모든 파일 타입 허용
       FilePickerResult? result = await FilePicker.platform.pickFiles();
 
       if (result != null && result.files.isNotEmpty) {
-        final file = result.files.first;
+        final rawFile = File(result.files.single.path!);
+
+        // ★ 로딩 표시 등을 보여주면 좋음 (선택 사항)
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('파일 용량을 확인하고 있습니다...'), duration: Duration(seconds: 1)),
+        );
+
+        // ★ 압축 및 용량 체크 실행
+        final validFile = await FileCompressor.compressIfNeeded(rawFile);
+
         setState(() {
-          _selectedFilePath = file.path;
-          _selectedFileName = file.name;
+          _selectedFilePath = validFile.path; // 압축된 경로 사용
+          _selectedFileName = result.files.single.name; // 이름은 원본 유지 (혹은 변경 가능)
         });
       }
     } catch (e) {
+      // ★ 1MB 넘는 문서나 압축 실패 시 에러 메시지 표시
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('파일 선택 실패: $e')),
+        SnackBar(
+          content: Text("1MB 초과한 파일은 첨부 할 수 없습니다"),
+          backgroundColor: Colors.red,
+        ),
       );
     }
   }
