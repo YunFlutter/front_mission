@@ -1,6 +1,3 @@
-아래는 **Markdown 문법에 맞게 정리된 전체 내용**입니다.
-👉 그대로 **복사해서 `README.md`에 붙여넣기** 하시면 됩니다.
-
 ````markdown
 # 📘 Front Mission - Flutter Application
 
