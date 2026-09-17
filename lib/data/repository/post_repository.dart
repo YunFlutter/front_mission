@@ -82,19 +82,16 @@ class PostRepository {
     if (filePath != null) {
       // 파일 경로에서 확장자를 보고 타입 추론 (예: image/jpeg)
       final mimeType = lookupMimeType(filePath) ?? 'application/octet-stream';
-      final splitMime = mimeType.split('/'); // ['image', 'jpeg']
-
       formData.files.add(
         MapEntry(
           'file',
           await MultipartFile.fromFile(
             filePath,
             filename: filePath.split('/').last,
-
+            contentType: MediaType.parse(mimeType),
           ),
         ),
       );
-
     }
 
     // 3. 전송
@@ -114,8 +111,6 @@ class PostRepository {
     }
   }
 
-
-
   Future<PostDetail> getPostDetail(int id) async {
     try {
       final response = await _dio.get('/boards/$id');
@@ -127,7 +122,6 @@ class PostRepository {
     }
   }
 
-
   // ★ 글 수정 (PATCH)
   Future<void> updatePost({
     required int id, // 수정할 글 ID
@@ -137,47 +131,45 @@ class PostRepository {
     String? filePath, // 새 파일 경로 (없으면 null)
   }) async {
     // 1. JSON 데이터 준비
-    final jsonMap = {
-      'title': title,
-      'content': content,
-      'category': category,
-    };
+    final jsonMap = {'title': title, 'content': content, 'category': category};
     final jsonString = jsonEncode(jsonMap);
 
     // 2. FormData 생성
     final formData = FormData();
 
     // request 파트 (application/json)
-    formData.files.add(MapEntry(
-      'request',
-      MultipartFile.fromString(
-        jsonString,
-        contentType: MediaType.parse('application/json'),
+    formData.files.add(
+      MapEntry(
+        'request',
+        MultipartFile.fromString(
+          jsonString,
+          contentType: MediaType.parse('application/json'),
+        ),
       ),
-    ));
+    );
 
     // 3. 파일이 '새로 선택되었을 때만' 보냄
     // (파일을 안 보내면 기존 파일이 유지되는 것이 일반적인 PATCH 동작)
     if (filePath != null) {
       // ★ 여기가 핵심: 파일 종류(MimeType)를 찾아서 알려줘야 함
       final mimeType = lookupMimeType(filePath) ?? 'application/octet-stream';
-      final splitMime = mimeType.split('/'); // ['image', 'jpeg']
-
       print("📤 [PATCH] 파일 수정 중: $filePath ($mimeType)"); // 디버그 로그
 
-      formData.files.add(MapEntry(
-        'file',
-        await MultipartFile.fromFile(
-          filePath,
-          filename: filePath.split('/').last,
+      formData.files.add(
+        MapEntry(
+          'file',
+          await MultipartFile.fromFile(
+            filePath,
+            filename: filePath.split('/').last,
+            contentType: MediaType.parse(mimeType),
+          ),
         ),
-      ));
+      );
     }
 
     // 4. 전송 (PATCH)
     await _dio.patch('/boards/$id', data: formData);
   }
-
 
   // ★ 글 삭제 (DELETE)
   Future<void> deletePost(int id) async {
@@ -189,5 +181,4 @@ class PostRepository {
       rethrow;
     }
   }
-
 }
