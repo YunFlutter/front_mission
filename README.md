@@ -1,72 +1,111 @@
-````markdown
-# 📘 Front Mission - Flutter Application
+# Front Mission — 인증·게시판 Flutter 애플리케이션
 
-이 프로젝트는 **Flutter**를 사용하여 개발된 게시판 애플리케이션입니다.  
-**Riverpod**을 이용한 상태 관리, **Dio**를 이용한 네트워크 통신(Interceptor 포함),  
-그리고 **MVVM 아키텍처**를 기반으로 구현되었습니다.
+Riverpod과 MVVM 구조로 구현한 게시판 애플리케이션입니다. 인증 토큰 관리부터 게시글 CRUD, 파일 업로드, 무한 스크롤까지 실제 서비스에서 자주 마주치는 흐름을 구현했습니다.
 
----
+> 이 저장소는 빅스페이먼츠 사전 과제로 제출한 프로젝트입니다. 제출일: 2026. 01. 17.
 
-## 🛠️ 개발 환경 및 요구사항 (Prerequisites)
+## 핵심 구현
 
-이 프로젝트를 실행하기 위해 다음 도구들이 설치되어 있어야 합니다.
+- 회원가입·로그인 입력값 검증 및 인증 상태 관리
+- `FlutterSecureStorage`를 이용한 Access Token·Refresh Token 저장
+- `Dio Interceptor` 기반 토큰 자동 주입·갱신·실패 요청 재전송
+- 게시글 목록·상세·작성·수정·삭제 구현
+- `NotificationListener` 기반 무한 스크롤 구현
+- 일반 파일 및 이미지 첨부, 1MB 초과 이미지 자동 압축
+- `Freezed`와 `json_serializable`을 이용한 불변 데이터 모델 구성
 
-- **Flutter SDK**: 3.32.8 (Stable Channel 권장)
-- **Dart SDK**: 3.8.1
-- **Android Studio** 또는 **VS Code**
-- **Xcode** (iOS 시뮬레이터 실행 시, macOS 필요)
+## 기술 스택
 
----
+| 구분 | 기술 |
+| --- | --- |
+| Language | Dart 3.8.1 |
+| Framework | Flutter 3.32.8 |
+| State Management | Riverpod, Riverpod Generator |
+| Network | Dio |
+| Model | Freezed, JSON Serializable |
+| Local Storage | Flutter Secure Storage |
+| File Handling | File Picker, Flutter Image Compress, MIME |
 
-## 🚀 설치 및 실행 가이드 (Installation & Run)
+## 설계 판단
 
-### 🛑 매우 중요 (Critical Check)
+### 인증 요청과 일반 요청의 책임 분리
 
-이 프로젝트는 **Freezed**와 **Riverpod Generator**를 사용하여 코드를 생성합니다.  
-반드시 **3. 코드 생성** 단계를 수행해야 앱이 정상적으로 실행됩니다.
+- 인증이 필요 없는 `/auth/signin`, `/auth/signup`, `/auth/refresh` 요청에는 토큰을 주입하지 않도록 분기함
+- 일반 요청에는 저장된 Access Token을 자동 주입하여 화면 코드에서 인증 헤더 처리를 제거함
+- `401` 또는 `403` 응답 시 Refresh Token으로 Access Token을 갱신하고 기존 요청을 재전송함
 
----
+### 파일 업로드 요청 재시도 처리
 
-### 1. 프로젝트 클론 (Clone)
+- `FormData`의 파일 스트림은 한 번 소비되면 그대로 재사용할 수 없음
+- 토큰 갱신 후 재시도할 때 필드와 파일을 복제한 새 `FormData`를 생성하도록 처리함
 
-터미널을 열고 소스 코드를 내려받거나 압축을 해제한 폴더로 이동합니다.
+### UI와 데이터 접근 로직 분리
+
+- UI는 화면 표시와 사용자 입력에 집중하도록 구성함
+- Repository에서 API 통신을 담당하고 Provider·Controller에서 화면 상태를 관리함
+- Freezed 모델을 사용하여 서버 응답 모델의 불변성과 직렬화 규칙을 명확히 함
+
+## 프로젝트 구조
+
+```text
+lib/
+├── core/
+│   ├── config/        # API 및 앱 설정
+│   ├── network/       # Dio, 인증 Interceptor
+│   └── utils/         # 입력값 검증, 이미지 압축
+├── data/
+│   ├── model/         # Freezed 데이터 모델
+│   ├── repository/    # 인증·게시글 API 통신
+│   └── service/       # Secure Storage
+├── provider/          # 인증·게시글 상태 관리
+└── ui/
+    ├── auth/          # 로그인·회원가입
+    ├── post/          # 목록·상세·작성·수정
+    └── common/        # 공통 UI
+```
+
+## 주요 사용자 흐름
+
+### 인증
+
+1. 이메일·비밀번호·이름 입력값 검증
+2. 로그인 성공 시 토큰을 Secure Storage에 저장
+3. 이후 API 요청에 Access Token 자동 추가
+4. 인증 만료 응답 시 토큰 갱신 후 기존 요청 재전송
+
+### 게시글
+
+1. 목록 조회 및 스크롤 하단 도달 시 다음 페이지 요청
+2. 상세 화면에서 작성자 권한에 따라 수정·삭제 버튼 노출
+3. 글 작성·수정 시 일반 파일 또는 이미지 첨부
+4. 1MB 초과 이미지는 압축한 뒤 MIME type과 함께 전송
+
+## 테스트 및 품질 검사
+
+현재 이메일·이름·비밀번호 검증 로직의 정상·경계·실패 입력을 단위 테스트합니다. GitHub Actions에서 정적 분석과 테스트를 자동 실행합니다.
 
 ```bash
-git clone [레포지토리 주소]
-cd [프로젝트 폴더명]
-````
+flutter analyze --no-fatal-infos
+flutter test
+```
 
----
+## 실행 방법
 
-### 2. 의존성 패키지 설치 (Install Dependencies)
+### 1. 저장소 복제
 
-프로젝트 실행에 필요한 라이브러리들을 다운로드합니다.
+```bash
+git clone https://github.com/YunFlutter/front_mission.git
+cd front_mission
+```
+
+### 2. 의존성 설치 및 코드 생성
 
 ```bash
 flutter pub get
-```
-
----
-
-### 3. 코드 생성 (Code Generation) ★ 필수 단계
-
-이 단계를 건너뛰면
-`Target of URI doesn't exist`, `Undefined class` 등의 컴파일 에러가 발생합니다.
-
-아래 명령어를 실행하여 `*.g.dart`, `*.freezed.dart` 파일을 생성해주세요.
-
-```bash
 dart run build_runner build -d
 ```
 
-* `-d` 옵션은 기존 생성 파일과 충돌 시 삭제 후 재생성합니다.
-
----
-
-### 4. iOS 실행 환경 설정 (macOS Only)
-
-iOS 시뮬레이터에서 실행할 경우 **CocoaPods** 설치가 필요합니다.
-(Android만 실행할 경우 이 단계는 생략하세요.)
+### 3. iOS 의존성 설치
 
 ```bash
 cd ios
@@ -74,127 +113,17 @@ pod install
 cd ..
 ```
 
----
-
-### 5. 앱 실행 (Run App)
-
-디바이스(시뮬레이터 또는 실기기)를 연결한 후 앱을 실행합니다.
+### 4. 앱 실행
 
 ```bash
 flutter run
 ```
 
----
+> 인증과 게시글 기능을 확인하려면 과제용 API 서버에 연결할 수 있는 환경이 필요합니다.
 
-## 🏗️ 프로젝트 구조 (Architecture)
+## 향후 개선
 
-기능 단위(Feature-first)와 계층형 아키텍처를 혼합하여 유지보수성을 높였습니다.
-
-```text
-lib/
-├── core/               # 앱 전역 설정 및 유틸리티
-│   ├── config/         # API URL 등 앱 설정 (AppConfig)
-│   ├── network/        # Dio 설정, Interceptor (Token 자동 주입/갱신)
-│   └── utils/          # Validator, FileCompressor 등
-├── data/               # 데이터 계층
-│   ├── model/          # 데이터 모델 (Freezed 불변 객체)
-│   ├── repository/     # API 통신 로직 (Dio)
-│   └── service/        # 로컬 스토리지 서비스 (SecureStorage)
-├── provider/           # 전역 상태 관리 (Riverpod Providers)
-└── ui/                 # 화면 및 뷰 컨트롤러 (Presentation Layer)
-    ├── auth/           # 로그인, 회원가입
-    ├── post/           # 게시글 목록, 상세, 작성, 수정
-    └── common/         # 공통 위젯 (UserInfo, ResponsiveLayout 등)
-```
-
----
-
-## ✨ 주요 기능 (Features)
-
-### 1. 인증 (Authentication)
-
-* **회원가입 / 로그인**
-
-    * 이메일 형식, 비밀번호 복잡성 등 엄격한 유효성 검사
-* **자동 로그인**
-
-    * `FlutterSecureStorage`를 사용하여 토큰 안전하게 저장
-* **토큰 갱신 (Silent Refresh)**
-
-    * API 요청 중 `401 Unauthorized` 또는 `403 Unauthorized` 발생 시
-      `Dio Interceptor`가 Refresh Token을 사용해 Access Token 갱신 후 요청 재전송
-
----
-
-### 2. 게시판 (Board)
-
-* **목록 조회**
-
-    * `NotificationListener` 기반 페이지네이션 (Infinite Scroll)
-* **상세 조회**
-
-    * 게시글 내용 확인 및 본인 권한에 따른 수정/삭제 버튼 노출
-* **글 작성 / 수정**
-
-    * 파일 첨부: 일반 파일 및 이미지 지원
-    * 이미지 압축: `flutter_image_compress` 사용
-      (1MB 초과 이미지 자동 압축)
-    * MimeType 처리:
-      `application/json` 및 파일별 정확한 MimeType 전송
-* **글 삭제**
-
-    * 삭제 전 확인 다이얼로그 제공
-
----
-
-## ❓ 트러블슈팅 (Troubleshooting)
-
-### Q. `Build failed` 또는 `Undefined class` 에러가 발생합니다.
-
-**A.** 코드 생성이 되지 않은 상태입니다.
-프로젝트 루트에서 아래 명령어를 실행하세요.
-
-```bash
-dart run build_runner build -d
-```
-
----
-
-### Q. iOS 실행 시 CocoaPods 관련 에러가 발생합니다.
-
-**A.** `ios` 폴더로 이동하여 팟파일을 업데이트하세요.
-
-```bash
-cd ios
-rm -rf Pods
-rm Podfile.lock
-pod install --repo-update
-cd ..
-```
-
----
-
-### Q. 401 에러가 계속 발생합니다.
-
-**A.** 저장된 토큰이 만료되었거나 손상되었을 수 있습니다.
-앱 데이터를 삭제하거나 로그아웃 후 다시 로그인해주세요.
-
----
-
-## 📝 사용된 라이브러리 (Dependencies)
-
-* **State Management**: `flutter_riverpod`, `riverpod_annotation`
-* **Network**: `dio`
-* **Data Class & Code Gen**: `freezed_annotation`, `json_annotation`, `build_runner`
-* **Storage**: `flutter_secure_storage`
-* **Utils**:
-
-    * `file_picker` (파일 선택)
-    * `flutter_image_compress` (이미지 압축)
-    * `mime` (MimeType 감지)
-    * `jwt_decoder` (JWT 파싱)
-
----
-
-**제출일**: 2026. 01. 17.
-
+- Dio 인증 Interceptor의 토큰 갱신·동시 요청 시나리오 테스트 추가
+- Repository 성공·실패 응답 테스트 추가
+- 주요 인증·게시글 화면의 Widget 테스트 추가
+- 실행 화면과 사용자 흐름 GIF 추가
